@@ -1,16 +1,41 @@
 import { useRef, useState } from "react";
 import validateFormFields from "../../../utils/validateFormFields";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../../utils/firebase";
+import { useNavigate } from "react-router-dom";
 
 const SignInForm = () => {
+  const navigate = useNavigate();
   const [formErrors, setFormErrors] = useState(null);
   const email = useRef(null);
   const password = useRef(null);
 
 
   const validateSignInForm = () => {
+
+
     const signInFormErrors = validateFormFields(email.current.value, password.current.value);
-    console.log(signInFormErrors);
+
     setFormErrors(signInFormErrors);
+    console.log(signInFormErrors, "signInFormErrors")
+
+
+    if (signInFormErrors == null) {
+      signInWithEmailAndPassword(auth, email.current.value, password.current.value)
+        .then((userCredential) => {
+          // Signed in 
+          const user = userCredential.user;
+          navigate("/browse")
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setFormErrors(errorMessage);
+        });
+    }
+
+
 
   };
 
