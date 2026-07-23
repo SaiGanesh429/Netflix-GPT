@@ -1,11 +1,9 @@
-import { useRef, useState } from "react";
-import validateFormFields from "../../../utils/validateFormFields";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { useRef, useState } from "react";
 import { auth } from "../../../utils/firebase";
-import { useNavigate } from "react-router-dom";
+import validateFormFields from "../../../utils/validateFormFields";
 
 const SignInForm = () => {
-  const navigate = useNavigate();
   const [formErrors, setFormErrors] = useState(null);
   const email = useRef(null);
   const password = useRef(null);
@@ -13,20 +11,14 @@ const SignInForm = () => {
 
   const validateSignInForm = () => {
 
-
     const signInFormErrors = validateFormFields(email.current.value, password.current.value);
-
     setFormErrors(signInFormErrors);
-    console.log(signInFormErrors, "signInFormErrors")
 
 
     if (signInFormErrors == null) {
       signInWithEmailAndPassword(auth, email.current.value, password.current.value)
         .then((userCredential) => {
-          // Signed in 
           const user = userCredential.user;
-          navigate("/browse")
-          // ...
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -58,7 +50,7 @@ const SignInForm = () => {
       />
       <label className="text-red-700 text-sm font-semibold">{formErrors}</label>
       <button
-        className="m-4 w-64 h-10 bg-red-600 text-white rounded border-solid border-2"
+        className=" cursor-pointer m-4 w-64 h-10 bg-red-600 text-white rounded border-solid border-2"
         type="submit"
         onClick={validateSignInForm}
       >

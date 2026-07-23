@@ -1,8 +1,8 @@
 import { onAuthStateChanged } from "firebase/auth";
 import { Suspense, useEffect } from "react";
 import { createBrowserRouter, RouterProvider, useNavigate } from "react-router-dom";
-import Body from "./components/Body";
-import Browse from "./components/Browse";
+import Body from "./components/Body/Body";
+import Browse from "./components/Browse/Browse";
 import { auth } from "./utils/firebase";
 import { Provider, useDispatch } from "react-redux";
 import appStore from "./utils/redux/appStore";

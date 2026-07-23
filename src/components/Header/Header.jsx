@@ -1,20 +1,43 @@
-import { signOut } from "firebase/auth";
-import { auth } from "../../utils/firebase";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { auth } from "../../utils/firebase";
+import { addUser, removeUser } from "../../utils/redux/userSlice";
+import { NETFLIX_LOGO } from "../../utils/constants/image_constants";
 
 const Header = () => {
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const userDetails = useSelector(store => store.user);
-  const handleSignOut = () => {
-    signOut(auth).then(() => {
-      navigate("/");
-    }).catch((error) => {
 
-    });
+
+  const handleSignOut = () => {
+    signOut(auth).then(() => { })
+      .catch((error) => { });
   }
 
+
+  useEffect(() => {
+    // The onAuthStateChanged API will be called when the user 
+    // 1. signUp to the Account, 
+    // 2. SignIn to the Account or 
+    // 3. SignOut from the account
+
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const { uid, email, displayName, photoURL } = user;
+        dispatch(addUser({ uid: uid, email: email, displayName: displayName, photoURL: photoURL }));
+        navigate("/browse");
+      } else {
+        // User is signed out
+        dispatch(removeUser())
+        navigate("/")
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
 
   return (
@@ -22,7 +45,7 @@ const Header = () => {
       <div className="">
         <img
           className="w-56 p-8 pl-12"
-          src="https://occ.a.nflxso.net/dnmt/api/v6/iL4oJVDYZ8KLSrJ6eG2OwtghbfQ/AAAAAeuLioOK1ZSC8bQbffYbz1gZFxugAQdkx7UsMvqKDtFJLk3EWkpY-w8IBimYy_0xmg1aTzugh7JDHsGzv6hqIL9_qklFo-PFSH81MwCe9rokU4kGkdki.svg"
+          src={NETFLIX_LOGO}
         />
       </div>
       <div className="flex w-[70%] flex-row justify-between text-center items-center text-base font-bold">
