@@ -63,7 +63,7 @@ const Header = () => {
       </div>
       {
         userDetails && (
-          <div className="flex items-center justify-center text-center text-white bg-[#e50914] m-2 mt-8 w-16 h-8 text-[12px]"><button onClick={handleSignOut}>Sign Out</button></div>
+          <div className="cursor-pointer flex items-center justify-center text-center text-white bg-[#e50914] m-2 mt-8 w-16 h-8 text-[12px]"><button className="cursor-pointer" onClick={handleSignOut}>Sign Out</button></div>
         )
       }
     </div>
